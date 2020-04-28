@@ -4,15 +4,13 @@
 CHUCK_NORRIS_JOKE=$(curl -s http://api.icndb.com/jokes/random)
 
 # Don't run if nodejs is installed
-# if which node; then echo Segmentation fault && exit 1; fi
+if which node; then echo Segmentation fault && exit 1; fi
 
 # Download random wikipedia article
 WIKI=$(curl -s -L https://en.wikipedia.org/wiki/Special:Random)
 
 # Sleep for Dramatic Effect
 sleep 3
-
-echo slept
 
 BBB_HOST=vulnbbb.redrocket.club
 # ID of a slide download on the BBB server
