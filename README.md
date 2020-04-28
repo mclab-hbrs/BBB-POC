@@ -2,9 +2,9 @@
 TL;DR: The patch for CVE-2020-12112 was insufficient. Lukas2511 found a bypass for it, so update to v2.2.6 asap.
 
 ## CVE-2020-12112
-BigBlueButton had a rather trivial LFI. It is described [here](https://github.com/tchenu/CVE-2020-12112).
+BigBlueButton had a rather trivial local file inclusion vulnerability. It is described [here](https://github.com/tchenu/CVE-2020-12112).
 
-Essentially it was possible to change the `presFilename` URL parameter to download aritraty files, instead of the presentiation.
+Essentially it was possible to change the `presFilename` URL parameter to download arbitraty files, instead of the presentiation.
 Example request downloading `/etc/passwd`:
 
 ```
