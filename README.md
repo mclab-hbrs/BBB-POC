@@ -47,7 +47,7 @@ Appending two parameters to the URL of the form:
 
 triggers the LFI. 
 
-Since NGINX checks `presfilename` for validity, but the Java backend interprets the `presFilename` parameter and the requested file will be returned by the backend.
+NGINX checks `presfilename` for validity, but the Java backend interprets the `presFilename` parameter. Therefore the requested file will be returned by the backend.
 
 ## Impact
 Using the LFI an attacker can for example download the file `/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties` which contains the `securitySalt` value in cleartext. With this `securitySalt` the attacker has access to the API, effectively gaining administrator privileges.
