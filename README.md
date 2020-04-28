@@ -2,16 +2,19 @@
 TL;DR: The patch for CVE-2020-12112 was insufficient. Lukas2511 found a bypass for it, so update to v2.2.6 asap.
 
 ## CVE-2020-12112
-BigBlueButton had a rather trivial LFI. It is described [here](https://github.com/tchenu/CVE-2020-12112)
-Essentially it was possible to change the `presFilename` URL parameter to download aritraty files, instead of the presentiation.
+BigBlueButton had a rather trivial LFI. It is described [here](https://github.com/tchenu/CVE-2020-12112).
 
+Essentially it was possible to change the `presFilename` URL parameter to download aritraty files, instead of the presentiation.
 Example request downloading `/etc/passwd`:
-`curl https://test.bigbluebutton.org/bigbluebutton/presentation/download/ffc98830dbfbac3dcc80cc4c5f30711ebd1c23e8-1586764259489/d2d9a672040fbde2a47a10bf6c37b6a4b5ae187f-1586764259500?presFilename=../../../../../etc/passwd`
+
+```
+curl https://test.bigbluebutton.org/bigbluebutton/presentation/download/ffc98830dbfbac3dcc80cc4c5f30711ebd1c23e8-1586764259489/d2d9a672040fbde2a47a10bf6c37b6a4b5ae187f-1586764259500?presFilename=../../../../../etc/passwd
+```
 
 ## The Patch
 The BigBlueButton maintainters rolled out an [emergency fix](https://github.com/bigbluebutton/bigbluebutton/commit/5ebdf5ca7718fc8bb3c08867edd150278e6a724c#diff-c7d77969a4547b5349e55c5466948a27R45) with version 2.2.5.
 
-Instead of fixing the LFI in the service, they introduced a check into the NGINX reverse proxy config:
+Instead of fixing the LFI in the service, they added a check to the NGINX reverse proxy config:
 
 ```
 location ~ "^/bigbluebutton/presentation/download\/[0-9a-f]+-[0-9]+/[0-9a-f]+-[0-9]+$" {
@@ -33,25 +36,29 @@ Unfortunately, this patch has (at least) two problems:
 2. Even with restrictive firewall rules, the LFI can still be exploited through the reverse proxy.
 
 ## Exploit via Reverse Proxy
-[!img/lol](http://lol.de)
+![Reverse Proxy Go Brrr](https://redrocket.club/reverse_proxy_go_brrr.png)
 
-Turns out, the `$arg_VARNAME$` variable in NGINX is case-insensitive. 
+As it turns out, the `$arg_VARNAME` variable in NGINX is case-insensitive. 
 This makes it possible to desynchronize the reverse proxy and the vulnerable backend service.
 
 Appending two parameters to the URL of the form:
 
-`?presfilename=a-1.pdf&presFilename=../../../../../../../../etc/passwd`
+`?presfilename=ff-1337.pdf&presFilename=../../../../../../../../etc/passwd`
 
-triggers the LFI, since NGINX checks `presfilename` for validity, but the Java backend interprets the `presFilename` parameter and returns the requested file.
+triggers the LFI. 
+
+Since NGINX checks `presfilename` for validity, but the Java backend interprets the `presFilename` parameter and the requested file will be returned by the backend.
 
 ## Impact
-Using the LFI an attacker can for example download the file `/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties` which contains the `securitySalt` value in clear text. With this `securitySalt` the attacker has access to the API, effectively gaining administrator privileges.
+Using the LFI an attacker can for example download the file `/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties` which contains the `securitySalt` value in cleartext. With this `securitySalt` the attacker has access to the API, effectively gaining administrator privileges.
 
-## Take Away
+## Take Aways
 The key takeaways here are:
 
-1. Always use failsafe defaults. Exposing a service to the outer world, that doesn't need to be exposed is probably not a good idea.
+1. Always use failsafe defaults. Exposing an internal service to the outer world is probably not a good idea.
 2. Instead of mitigating, always fix the **root of cause**, the actual vulnerability .
 
-But of course this is easy for me to say. I don't have to do it. BigBlueButton is a great open source tool with a very active developer community. They fixed the reported bugs very fast (and I assume in their spare time). So maybe consider supporting BBB by [contributing to the project](http://docs.bigbluebutton.org/support/faq.html#how-can-i-contribute).
+But of course this is easy for me to say. I don't have to fix anything.
+
+BigBlueButton is a great open source tool with a very active developer community. They fixed the reported bugs very fast (I assume in their spare time). So maybe consider supporting BBB by [contributing to the project](http://docs.bigbluebutton.org/support/faq.html#how-can-i-contribute).
 
