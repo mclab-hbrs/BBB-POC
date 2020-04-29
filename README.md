@@ -62,3 +62,4 @@ But of course this is easy for me to say. I don't have to fix anything.
 
 BigBlueButton is a great open source tool with a very active developer community. They fixed the reported bugs very fast (I assume in their spare time). So maybe consider supporting BBB by [contributing to the project](http://docs.bigbluebutton.org/support/faq.html#how-can-i-contribute).
 
+This issue was asigned **CVE-2020-12443**.
