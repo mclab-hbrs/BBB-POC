@@ -34,13 +34,13 @@ the uploaded file to it's original filename, probably to make it easier to ident
 which file has been downloaded for the end user. It's unclear why they did it this
 way and didn't simply set an appropriate http header.
 
-![pic2.png](img/pic1.png)
+![pic2.png](img/pic2.png)
 
 Unfortunately when building the file path for this there is absolutely no sanitization
 of the original name, and it's pretty easy to traverse the path back to root and basically
 write to any path, but it's still limited to the whitelisted extensions.
 
-![pic4.png](img/pic1.png)
+![pic4.png](img/pic4.png)
 
 ## Possible Exploitation
 Only files with the allowed filename extensions can be uploaded to the system under any path.
