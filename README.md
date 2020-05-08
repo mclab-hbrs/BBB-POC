@@ -1,4 +1,4 @@
-# BBB POCs
+# BigBlueButton Vulnerabilities
 This is a collection of BBB security vulnerabilities we found:
 
 * [Local File Inclusion, CVE-2020-12443](writeups/LFI_CVE-2020-12443.md)
