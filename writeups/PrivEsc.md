@@ -7,5 +7,5 @@ editing the file `/lib/systemd/system/bbb-web.service`.
 
 ![systemd unit file](img/systemd.png)
 
-This bug could be chained together with the [arbitrary write bug](FileWrite.md) if an attack managers to place a symlink (e.g. /tmp/hacked.txt) and make it point to the systemd unit file.
-On next service restart or system reboot that would trigger the execution of the attackers code. If done right this won't leave a noticable trace.
+This bug could be chained together with the [arbitrary write bug](FileWrite.md) if an attacker manages to place a symlink (e.g. /tmp/hacked.txt) and make it point to the systemd unit file.
+A service restart or system reboot would trigger the execution of the attackers code. If done right, this won't leave a noticable trace.
