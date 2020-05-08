@@ -1,11 +1,10 @@
 # File Write
-In BBB versions < 2.2.10 there is a bug when processing files for download,
-that allows overriding files with any of BBBs accepted extensions (e.g. txt,
+BBB versions < 2.2.10 contain a bug when processing files for download.
+It allows overwriting files with any of BBBs accepted extensions (e.g. txt,
 png, pdf). This can potentially be used together with the [privilege escalation bug](PrivEsc.md).
-An attacker needs to have the "presenter" role.
+An attacker needs to have the "presenter" role to exploit this bug.
 
 ## Uploading a file
-
 When uploading a file, BBB stores the file as something like
 
 /var/bigbluebutton/${conference_id}/${room_id}/${file_id}/${file_id}.${file_extension}
@@ -43,5 +42,10 @@ write to any path, but it's still limited to the whitelisted extensions.
 
 ![pic4.png](img/pic1.png)
 
-Maybe there is a way to make Java truncate a `File()`-path, maybe with spezial bytes. 
-However, we haven't found a way to do so, yet.
+## Possible Exploitation
+Only files with the allowed filename extensions can be uploaded to the system under any path.
+That limits the files an attacker can overwrite.
+
+Maybe it is possible to make Java truncate a `File()`-path, so that the filename extension gets chunked off.
+However, we have yet to find a way to do so.
+
